@@ -1,0 +1,79 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+/*
+ * A simple React component
+ */
+class Application extends React.Component {
+
+  constructor(props){
+    super(props)
+    this.state ={
+      columnNames:[
+        
+      ]
+    }
+    this.saveName = this.saveName.bind(this)
+  }
+  saveName(index,event){
+    var newState = this.state.columnNames;
+    newState[index].name = event.target.value;
+    this.setState({columnNames:newState});
+    console.log("inside")
+  }
+  toggleProperty(index){
+    var newState = this.state.columnNames;
+    newState[index].disabled = !newState[index].disabled ;
+    this.setState({columnNames:newState});
+  }
+  removeCloumnname(index){
+    var newState = this.state.columnNames;
+    newState.splice(index,1)
+    this.setState({columnNames:newState});
+  }
+
+  addRow(){
+    var defaultValue ={name:"nam1",
+        disabled:true}
+    var newState = this.state.columnNames;
+    newState.push(defaultValue);
+    this.setState({columnNames:newState});
+  }
+  render() {
+    let columnNames = this.state.columnNames;
+    const tableContent=columnNames.map((name,index)=>
+      <tr key={index}> 
+        <th><input type="text" Value={name.name} disabled={name.disabled} onKeyUp={(e)=>this.saveName(index,e)}></input></th>
+        <th><button onClick={()=>this.toggleProperty(index)}>{name.disabled?"Edit":"Save"}</button></th>
+        <th><button onClick={()=>this.removeCloumnname(index)}>Delete</button></th> 
+      </tr>
+    );
+    return <div>
+    <button onClick={()=>this.addRow()}>Add</button>
+      <table>
+       <RowHead/>
+       {tableContent}
+      </table>
+      {columnNames.map((name)=>
+      <p>{name.name}</p>
+      )}
+    </div>;
+  }
+}
+
+class RowHead extends React.Component {
+  render(){
+    
+   return<tr>
+  <th>Cloumnname</th>
+  <th>EditButtons</th>
+  <th>DeleteButtons</th>
+  </tr>
+  }
+}
+
+
+/*
+ * Render the above component into the div#app
+ */
+ReactDOM.render(<Application />, document.getElementById('root'));
+//ReactDOM.render(<App />, document.getElementById('root'))
